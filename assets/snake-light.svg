@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="180" viewBox="0 0 880 180" role="img" aria-label="Contribution snake placeholder, generated daily by GitHub Actions">
+  <title>Contribution snake</title>
+  <defs>
+    <pattern id="sdots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.9" fill="#D3DDEA"/>
+    </pattern>
+  </defs>
+  <rect x="0.5" y="0.5" width="879" height="179" rx="16" fill="#F8FAFD" stroke="#DCE5F0" stroke-dasharray="6 6"/>
+  <rect x="0.5" y="0.5" width="879" height="179" rx="16" fill="url(#sdots)" opacity="0.6"/>
+  <text x="440" y="82" text-anchor="middle" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#0F172A">Contribution snake</text>
+  <text x="440" y="106" text-anchor="middle" font-family="'Cascadia Code','SF Mono',Menlo,Consolas,monospace" font-size="10" fill="#5B6B84">Generated daily by GitHub Actions (03:17 UTC).</text>
+  <text x="440" y="124" text-anchor="middle" font-family="'Cascadia Code','SF Mono',Menlo,Consolas,monospace" font-size="10" fill="#5B6B84">Run the &#8220;Update profile assets&#8221; workflow to replace this placeholder with your real snake.</text>
+  <g fill="#0891B2">
+    <circle cx="418" cy="146" r="2"><animate attributeName="opacity" values="0.2;1;0.2" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="432" cy="146" r="2"><animate attributeName="opacity" values="0.2;1;0.2" dur="2.4s" begin="0.3s" repeatCount="indefinite"/></circle>
+    <circle cx="446" cy="146" r="2"><animate attributeName="opacity" values="0.2;1;0.2" dur="2.4s" begin="0.6s" repeatCount="indefinite"/></circle>
+  </g>
+</svg>
