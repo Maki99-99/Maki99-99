@@ -55,48 +55,36 @@
 
 ## Stack
 
-<div align="center">
+<p align="center">
+  <b>Front end</b><br>
+  <img src="assets/stack/React-Dark.svg" alt="React" height="40" />
+  <img src="assets/stack/TypeScript.svg" alt="TypeScript" height="40" />
+  <img src="assets/stack/JavaScript.svg" alt="JavaScript" height="40" />
+</p>
 
-<table>
-  <tr>
-    <td align="right"><b>Front end</b></td>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=react,ts,js&amp;theme=dark">
-        <img alt="Front-end skills: React, TypeScript, JavaScript" src="https://skillicons.dev/icons?i=react,ts,js&amp;theme=light">
-      </picture>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>Back end</b></td>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=spring,django,laravel,java,py,php&amp;theme=dark">
-        <img alt="Back-end skills: Spring Boot, Django, Laravel, Java, Python, PHP" src="https://skillicons.dev/icons?i=spring,django,laravel,java,py,php&amp;theme=light">
-      </picture>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>Databases</b></td>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=mysql,postgres&amp;theme=dark">
-        <img alt="Databases: MySQL, PostgreSQL" src="https://skillicons.dev/icons?i=mysql,postgres&amp;theme=light">
-      </picture>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>DevOps &amp; tooling</b></td>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=docker,kubernetes,git,github&amp;theme=dark">
-        <img alt="DevOps and tooling: Docker, Kubernetes, Git, GitHub" src="https://skillicons.dev/icons?i=docker,kubernetes,git,github&amp;theme=light">
-      </picture>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <b>Back end</b><br>
+  <img src="assets/stack/Spring-Dark.svg" alt="Spring Boot" height="40" />
+  <img src="assets/stack/Django.svg" alt="Django" height="40" />
+  <img src="assets/stack/Laravel-Dark.svg" alt="Laravel" height="40" />
+  <img src="assets/stack/Java-Dark.svg" alt="Java" height="40" />
+  <img src="assets/stack/Python-Dark.svg" alt="Python" height="40" />
+  <img src="assets/stack/PHP-Dark.svg" alt="PHP" height="40" />
+</p>
 
-</div>
+<p align="center">
+  <b>Databases</b><br>
+  <img src="assets/stack/MySQL-Dark.svg" alt="MySQL" height="40" />
+  <img src="assets/stack/PostgreSQL-Dark.svg" alt="PostgreSQL" height="40" />
+</p>
+
+<p align="center">
+  <b>DevOps &amp; tooling</b><br>
+  <img src="assets/stack/Docker.svg" alt="Docker" height="40" />
+  <img src="assets/stack/Kubernetes.svg" alt="Kubernetes" height="40" />
+  <img src="assets/stack/Git.svg" alt="Git" height="40" />
+  <img src="assets/stack/Github-Dark.svg" alt="GitHub" height="40" />
+</p>
 
 <p align="center">
   <picture>
