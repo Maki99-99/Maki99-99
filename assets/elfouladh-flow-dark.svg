@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="648" viewBox="0 0 560 648" role="img" aria-label="El Fouladh attendance workflow: a worker files a leave or mission request, or justifies past absences; the dossier is saved with status En attente; the HR manager reviews the document and approves or rejects with a reason; every calendar day is recomputed live from presences, validated requests and justifications; the worker sees the outcome and any refusal reason in Mes demandes and can export a PDF.">
+  <title>El Fouladh — request and validation workflow</title>
+  <defs>
+    <linearGradient id="fbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#0F1A2E"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3E51C9"/>
+    </marker>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="559" height="647" rx="16" fill="url(#fbg)" stroke="#23304F"/>
+  <text x="48" y="32" font-family="'Cascadia Code','SF Mono',Menlo,Consolas,monospace" font-size="9.5" letter-spacing="2.5" fill="#8CA3C7">EL FOULADH · ATTENDANCE WORKFLOW</text>
+
+  <!-- arrows -->
+  <g stroke="#3E51C9" stroke-width="1.6" fill="none">
+    <line x1="280" y1="138" x2="280" y2="167" marker-end="url(#arrow)"/>
+    <line x1="280" y1="260" x2="280" y2="289" marker-end="url(#arrow)"/>
+    <line x1="280" y1="382" x2="280" y2="411" marker-end="url(#arrow)"/>
+    <line x1="280" y1="504" x2="280" y2="533" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- packet travelling down the flow (drawn under the cards) -->
+  <circle r="3.2" fill="#22D3EE">
+    <animateMotion dur="7s" repeatCount="indefinite" path="M280,58 L280,616"/>
+  </circle>
+
+  <!-- 01 · worker -->
+  <g>
+    <rect x="48" y="52" width="464" height="82" rx="12" fill="#101B31" stroke="#23304F"/>
+    <circle cx="80" cy="93" r="14" fill="#16223B" stroke="#263B86"/>
+    <text x="80" y="97" text-anchor="middle" font-family="'Cascadia Code','SF Mono',Menlo,Consolas,monospace" font-size="10" fill="#A5B4FC">01</text>
+    <text x="108" y="81" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="16.5" font-weight="800" fill="#E6EDF7">Worker</text>
+    <text x="108" y="103" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">Files a leave or mission request, or justifies</text>
+    <text x="108" y="120" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">past absences — signed document attached.</text>
+  </g>
+
+  <!-- 02 · request saved -->
+  <g>
+    <rect x="48" y="174" width="464" height="82" rx="12" fill="#101B31" stroke="#23304F"/>
+    <circle cx="80" cy="215" r="14" fill="#16223B" stroke="#263B86"/>
+    <text x="80" y="219" text-anchor="middle" font-family="'Cascadia Code','SF Mono',Menlo,Consolas,monospace" font-size="10" fill="#A5B4FC">02</text>
+    <text x="108" y="203" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="16.5" font-weight="800" fill="#E6EDF7">Request saved</text>
+    <text x="108" y="225" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">Stored with status « En attente » —</text>
+    <text x="108" y="242" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">an explicit HR decision is required.</text>
+  </g>
+
+  <!-- 03 · HR review -->
+  <g>
+    <rect x="48" y="296" width="464" height="82" rx="12" fill="#101B31" stroke="#23304F"/>
+    <circle cx="80" cy="337" r="14" fill="#16223B" stroke="#263B86"/>
+    <text x="80" y="341" text-anchor="middle" font-family="'Cascadia Code','SF Mono',Menlo,Consolas,monospace" font-size="10" fill="#A5B4FC">03</text>
+    <text x="108" y="325" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="16.5" font-weight="800" fill="#E6EDF7">HR review</text>
+    <text x="108" y="347" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">The HR manager previews the document,</text>
+    <text x="108" y="364" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">then approves or rejects with a reason.</text>
+  </g>
+
+  <!-- 04 · live calendar -->
+  <g>
+    <rect x="48" y="418" width="464" height="82" rx="12" fill="#101B31" stroke="#23304F"/>
+    <circle cx="80" cy="459" r="14" fill="#16223B" stroke="#263B86"/>
+    <text x="80" y="463" text-anchor="middle" font-family="'Cascadia Code','SF Mono',Menlo,Consolas,monospace" font-size="10" fill="#A5B4FC">04</text>
+    <text x="108" y="447" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="16.5" font-weight="800" fill="#E6EDF7">Live calendar</text>
+    <text x="108" y="469" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">Every day is recomputed on the fly from presences,</text>
+    <text x="108" y="486" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">validated requests and justifications — nothing stored.</text>
+  </g>
+
+  <!-- 05 · mes demandes -->
+  <g>
+    <rect x="48" y="540" width="464" height="82" rx="12" fill="#101B31" stroke="#23304F"/>
+    <circle cx="80" cy="581" r="14" fill="#16223B" stroke="#263B86"/>
+    <text x="80" y="585" text-anchor="middle" font-family="'Cascadia Code','SF Mono',Menlo,Consolas,monospace" font-size="10" fill="#A5B4FC">05</text>
+    <text x="108" y="569" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="16.5" font-weight="800" fill="#22D3EE">« Mes demandes »</text>
+    <text x="108" y="591" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">The worker sees the outcome and any refusal reason;</text>
+    <text x="108" y="608" font-family="Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="11.5" fill="#8CA3C7">every dossier exports to PDF.</text>
+  </g>
+</svg>

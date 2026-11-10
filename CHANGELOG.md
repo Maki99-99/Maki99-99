@@ -1,59 +1,49 @@
-# Changelog — profile README redesign
+# CHANGELOG
 
-## What changed (2026-11-10)
+Profile README for **Maki99-99**. Visuals live in `/assets` (two skins each, served via `<picture>`), everything image path is relative to the repo root.
 
-- **New animated hero banner** (`assets/hero-dark.svg` / `hero-light.svg`): hand-built SMIL animation — no JavaScript — with a name lockup, capsule frame, drifting waves, pulsing sparkles and a terminal-style typing effect that cycles through `Full-Stack Developer` → `Django · Spring Boot · Laravel · React` → `Docker · Kubernetes · CI/CD`.
-- **About section turned into cards** (4 punchy capability cards + philosophy quote + "currently building" line).
-- **Skill wall grouped by category** (Front end / Back end / Databases / DevOps) using skillicons.dev, one icon strip per category.
-- **Featured project card** for `deploiement` with a custom animated architecture SVG (`assets/deploiement-arch-*.svg`): Browser + Docker feed a Kubernetes cluster; animated packets travel Browser → NGINX Ingress → Angular / Spring Boot → MySQL, and a "deploy" packet flows from Docker into the cluster.
-- **Placeholders** for two upcoming projects ("Next in the lab" table).
-- **Live stats**: GitHub stats card, top languages and streak (github-readme-stats / streak-stats) **plus** a repo-generated trophy strip and a GitHub-Actions-generated 12-month contribution heatmap — all with dark/light variants.
-- **Auto-updating visuals** via `.github/workflows/update-assets.yml` (daily at 03:17 UTC + manual dispatch + on relevant pushes): regenerates the contribution snake (`platane/snk`), a "repos / stars / followers / last push" card, a trophy strip, and a contribution-activity heatmap using the GitHub GraphQL API (`scripts/generate-assets.mjs`), then commits the results to `/assets` using the default `GITHUB_TOKEN` (no hardcoded secrets, `permissions: contents: write` only).
-- **Animated divider + footer**, profile-views counter, social badges, and an HTML-comment easter egg.
-- **Every image** has meaningful alt text, is ≤ 880 px wide, and is wrapped in a `<picture>` block with a `(prefers-color-scheme: dark)` source and a light fallback.
+## 2026-11-10 — Self-hosted stats, cleanup, El Fouladh
 
-## Adding or replacing a project
+### Removed
+- **github-readme-stats cards** (stats + top languages) — the broken images. Replaced by SVGs generated inside GitHub Actions (see below). No external stats server is used anymore.
+- **Trophies strip** (the custom Public Repos / Total Stars / Followers / Languages row).
+- **Last-push column** and the `auto-generated … refreshed daily` footer from the bottom metrics card (now 3 columns: repos, stars, followers).
+- **Custom activity heatmap** — the contribution snake is now the single contribution visual (streak card kept).
+- **"Next in the lab"** placeholder rows — section deleted until a real project exists.
+- **Profile views counter** (komarev hit counter).
+- Duplicate badge clutter: exactly one LinkedIn and one GitHub badge (top of the page); project "Source code" badges carry no GitHub logo.
+- Stack icons: Angular (front end) and GitHub Actions (DevOps), per the stack update.
 
-1. Open `README.md` and find **Featured project** (flagship) or the **Next in the lab** table (placeholders).
-2. For a new featured project, copy the existing `### deploiement` block: pitch paragraph → diagram → badge row.
-3. Optional diagram: create an SVG (max 880 px wide, use the palette below) in two variants, commit them to `assets/`, then reference them with the same `<picture>` pattern:
-   ```html
-   <picture>
-     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Maki99-99/Maki99-99/main/assets/<name>-dark.svg">
-     <img width="880" alt="Meaningful description" src="https://raw.githubusercontent.com/Maki99-99/Maki99-99/main/assets/<name>-light.svg">
-   </picture>
-   ```
-4. Replace a placeholder row in the table with: `| **[repo](url)** | One-line pitch. | Tech · stack |`.
+### Fixed
+- Stats and top-languages cards are now **generated from the GitHub API by `scripts/generate-assets.mjs`** and committed to `/assets`, referenced with relative paths — no third-party stats service to go down.
+- Stack rows rebuilt as a tight 2-column table (right-aligned labels, one icon strip per row, same 48px icon size) for consistent spacing.
+- Numbers on the generated cards come straight from the API in the same workflow — commits/PRs/issues/reviews are a 12-month `contributionsCollection`; languages are summed per-repo byte counts (own, non-fork repos, top 5).
+- All `/assets` references are relative (`assets/…svg`), so paths are verified against the repo itself.
 
-## Previewing locally
+### Added
+- **El Fouladh — Attendance Management** project card + a 5-step workflow diagram (`assets/elfouladh-flow-{dark,light}.svg`, portrait for mobile). The flow is taken from the app's code: request or justification → « En attente » → HR approve/reject with reason → live day-status recompute → status visible in « Mes demandes ».
 
-- **VS Code / any Markdown preview**: open `README.md` — local file links resolve, remote images need internet. Toggle your OS/browser dark mode to check both `<picture>` variants.
-- **GitHub-like rendering**: `pip install grip` then `grip README.md` → http://localhost:6419 (renders through GitHub's markdown API; dark/light depends on browser `prefers-color-scheme`).
-- **On GitHub**: the repo page and the profile page render the same file. On the profile page, relative `assets/...` paths would resolve against `github.com/<user>/` and 404 — that is why this README uses absolute `raw.githubusercontent.com/.../main/assets/...` URLs. Files themselves live in `/assets` and are versioned normally.
+### Workflow and secrets
+- `.github/workflows/update-assets.yml` runs on a daily schedule, on `workflow_dispatch`, and on push to `main` (README/scripts/workflow changes); it commits only when `assets/` actually changed, with `permissions: contents: write` and no hardcoded secrets.
+- **One-time setup:** add a repository secret `PAT_1` (Settings → Secrets and variables → Actions) holding a *classic* personal access token with the `read:user` scope. The workflow passes it to the script as `GH_STATS_TOKEN` and falls back to `GITHUB_TOKEN` when the secret is absent.
+- To regenerate locally: `GH_STATS_TOKEN=<pat> node scripts/generate-assets.mjs` (without a token the GitHub-stats card stays a placeholder; the workflow fills it).
 
-## Automation notes
+### Adding a new project card
+1. Copy the `### El Fouladh — Attendance Management` block in `README.md` (pitch line, optional diagram, badge row).
+2. Point the "Source code" badge at the repo: `https://img.shields.io/badge/Source%20code-<Label>-6366F1?style=for-the-badge` and add 2–4 stack badges (`for-the-badge`, brand colour).
+3. For a diagram, add `myproject-flow-dark.svg` + `myproject-flow-light.svg` to `/assets` using the palette below, then wire them via `<picture>` (dark `<source>`, light fallback `<img>`, always with `width` and meaningful `alt`).
+4. Keep width ≤ ~900px, both themes, and update the static alt text if the flow changes.
 
-- **Do not hand-edit** `assets/snake-*.svg`, `assets/stats-card-*.svg`, `assets/trophies-*.svg` and `assets/activity-*.svg` — the workflow overwrites them. Snake, trophies and stats card ship pre-seeded; the activity heatmap ships as a styled placeholder until the first workflow run.
-- Trigger a refresh manually: **Actions → Update profile assets → Run workflow**. Locally: `node scripts/generate-assets.mjs` (set `GITHUB_TOKEN` to also regenerate the activity heatmap; the GraphQL API rejects anonymous calls).
-- The workflow is idempotent: it exits without committing when nothing changed.
+### Palette and type (all custom SVGs)
+- Dark: bg `#0B1220 → #0F1A2E`, border `#23304F`, text `#E6EDF7`, muted `#8CA3C7`, indigo `#818CF8`, cyan `#22D3EE`.
+- Light: bg `#FFFFFF → #F3F7FC`, border `#DCE5F0`, text `#0F172A`, muted `#5B6B84`, indigo `#4F46E5`, cyan `#0891B2`.
+- Type: Inter/system sans for copy, Cascadia Code/SF Mono/Consolas for labels.
 
-## Third-party services used (and fallbacks)
+### Third-party services still in use
+| Service | Used for | Status |
+| :-- | :-- | :-- |
+| skillicons.dev | Stack icons (dark/light variants) | up (2026-11-10) |
+| img.shields.io | Social, project and stack badges | up (2026-11-10) |
+| streak-stats.demolab.com | Contribution streak card | up (2026-11-10) |
 
-Availability was audited on 2026-11-10. The public activity-graph and trophy instances answered **HTTP 402 for every user**, so they were replaced with self-generated SVGs (same slots, same palette). Swap the `<picture>` sources back if those services ever recover and you prefer them.
-
-| Service | Used for | Audit | If it goes down |
-| --- | --- | --- | --- |
-| skillicons.dev | tech stack icons | 200 | swap the `<picture>` srcs for shields.io badges |
-| github-readme-stats | stats + top languages | 503 (public instance rate-limited; usually recovers) | self-host the fork on Vercel, or remove the two cards (the custom stats card below still covers repos/stars/activity) |
-| streak-stats.demolab.com | streak card | 200 | self-host or remove |
-| shields.io / komarev.com | social + views badges | 200 | brief badge outages; the text links above remain usable |
-| ~~github-readme-activity-graph~~ | *replaced* by `assets/activity-*.svg` (GraphQL heatmap) | 402 | regenerated by this repo's workflow |
-| ~~github-profile-trophy~~ | *replaced* by `assets/trophies-*.svg` | 402 | regenerated by this repo's workflow |
-
-All custom visuals (hero, architecture, divider, snake, stats card) are repo-hosted, so the core of the page never depends on a third party. Every `<img>` has alt text, so the page degrades gracefully.
-
-## Palette and type
-
-- **Dark**: background `#0B1220 → #101C36`, border `#23304F`, text `#E6EDF7`, muted `#8CA3C7`, indigo `#818CF8`, cyan `#22D3EE`.
-- **Light**: background `#FFFFFF → #F3F7FC`, border `#DCE5F0`, text `#0F172A`, muted `#5B6B84`, indigo `#4F46E5`, cyan `#0891B2`.
-- **Type**: Inter/system sans for display text; Cascadia Code/SF Mono/monospace for labels and terminal lines. Every custom SVG uses the same two stacks.
+If one of these ever fails, replace it the same way the stats cards were replaced: generate a themed SVG in the workflow and reference it from `/assets`.

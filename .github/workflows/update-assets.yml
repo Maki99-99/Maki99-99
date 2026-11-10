@@ -30,10 +30,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Generate profile assets (stats card, trophies, activity heatmap)
+      - name: Generate profile cards (metrics, GitHub stats, top languages)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_USER: ${{ github.repository_owner }}
+          # PAT_1: repository secret, classic PAT with the read:user scope
+          # (see CHANGELOG.md). Falls back to the workflow token when unset.
+          # Never hardcode tokens here or in scripts.
+          GH_STATS_TOKEN: ${{ secrets.PAT_1 }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/generate-assets.mjs
 
       - name: Generate contribution snake (SVG)

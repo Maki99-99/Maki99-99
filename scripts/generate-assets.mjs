@@ -1,223 +1,227 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+#!/usr/bin/env node
+// Renders the self-hosted profile cards straight from the GitHub API and
+// writes them to /assets:
+//   - stats-card-*.svg    profile metrics (repos, stars, followers)
+//   - github-stats-*.svg  contributions for the last 12 months
+//   - top-langs-*.svg     most used languages by code size
+// Run by .github/workflows/update-assets.yml. Auth comes from the workflow
+// (PAT_1 preferred, GITHUB_TOKEN fallback) — never from the code.
+
+import { writeFile, mkdir } from "node:fs/promises";
+import path from "node:path";
 
 const USER = process.env.GH_USER || "Maki99-99";
-const TOKEN = process.env.GITHUB_TOKEN || "";
-const OUT_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "..", "assets");
+const TOKEN = process.env.GH_STATS_TOKEN || process.env.GITHUB_TOKEN || "";
+const API = "https://api.github.com";
+const OUT = path.join(process.cwd(), "assets");
 
 const headers = {
   Accept: "application/vnd.github+json",
-  "User-Agent": `profile-assets-bot (${USER})`,
+  "User-Agent": `${USER}-profile-assets`,
+  ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
 };
-if (TOKEN) headers.Authorization = `Bearer ${TOKEN}`;
 
-async function gh(path) {
-  const res = await fetch(`https://api.github.com${path}`, { headers });
-  if (!res.ok) throw new Error(`GitHub API ${res.status} for ${path}`);
-  return res.json();
-}
-
-const profile = await gh(`/users/${USER}`);
-
-const repos = [];
-for (let page = 1; ; page += 1) {
-  const batch = await gh(`/users/${USER}/repos?per_page=100&page=${page}`);
-  repos.push(...batch);
-  if (batch.length < 100) break;
-}
-
-const stars = repos.reduce((sum, repo) => sum + (repo.stargazers_count ?? 0), 0);
-const languages = [...new Set(repos.map((r) => r.language).filter(Boolean))];
-const lastPush = repos.reduce((latest, repo) => {
-  const pushed = repo.pushed_at ?? "";
-  return pushed > latest ? pushed : latest;
-}, "");
-const lastPushDate = lastPush.slice(0, 10) || new Date().toISOString().slice(0, 10);
+const mono = "'Cascadia Code','SF Mono',Menlo,Consolas,monospace";
+const sans = "Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 
 const themes = {
   dark: {
-    bgA: "#0B1220", bgB: "#0F1A2E", border: "#23304F",
-    text: "#E6EDF7", muted: "#8CA3C7", accent: "#818CF8", accent2: "#22D3EE",
-    levels: ["#16223B", "#263B86", "#3E51C9", "#6673F0", "#A5B4FC"],
+    bg0: "#0B1220", bg1: "#0F1A2E", border: "#23304F",
+    text: "#E6EDF7", muted: "#8CA3C7",
+    track: "#16223B", grad0: "#3E51C9", grad1: "#22D3EE",
   },
   light: {
-    bgA: "#FFFFFF", bgB: "#F3F7FC", border: "#DCE5F0",
-    text: "#0F172A", muted: "#5B6B84", accent: "#4F46E5", accent2: "#0891B2",
-    levels: ["#E9EFF7", "#C7D2FE", "#8B93F8", "#6366F1", "#4338CA"],
+    bg0: "#FFFFFF", bg1: "#F3F7FC", border: "#DCE5F0",
+    text: "#0F172A", muted: "#5B6B84",
+    track: "#E9EFF7", grad0: "#6366F1", grad1: "#0891B2",
   },
 };
 
-const FONT_SANS = "Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-const FONT_MONO = "'Cascadia Code','SF Mono',Menlo,Consolas,monospace";
+const esc = (s) =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const metrics = [
-  { label: "PUBLIC REPOS", value: String(profile.public_repos ?? repos.length), cx: 128 },
-  { label: "TOTAL STARS", value: String(stars), cx: 352 },
-  { label: "FOLLOWERS", value: String(profile.followers ?? 0), cx: 576 },
-  { label: "LAST PUSH", value: lastPushDate, cx: 772 },
-];
-
-function renderStatsCard(theme) {
-  const columns = metrics
-    .map(
-      (m) => `  <text x="${m.cx}" y="50" text-anchor="middle" font-family="${FONT_MONO}" font-size="9.5" letter-spacing="2" fill="${theme.muted}">${m.label}</text>
-  <text x="${m.cx}" y="80" text-anchor="middle" font-family="${FONT_SANS}" font-size="${m.value.length > 6 ? 19 : 24}" font-weight="800" fill="${theme.text}">${m.value}</text>`
-    )
-    .join("\n");
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="880" height="120" viewBox="0 0 880 120" role="img" aria-label="Auto-updated profile metrics: ${profile.public_repos ?? repos.length} public repos, ${stars} total stars, ${profile.followers ?? 0} followers, last push ${lastPushDate}">
-  <title>Profile metrics — Maki99-99</title>
-  <defs>
-    <linearGradient id="sbg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="${theme.bgA}"/>
-      <stop offset="1" stop-color="${theme.bgB}"/>
-    </linearGradient>
-  </defs>
-  <rect x="0.5" y="0.5" width="879" height="119" rx="16" fill="url(#sbg)" stroke="${theme.border}"/>
-  <g stroke="${theme.border}" stroke-opacity="0.9">
-    <line x1="240" y1="30" x2="240" y2="90"/>
-    <line x1="464" y1="30" x2="464" y2="90"/>
-    <line x1="688" y1="30" x2="688" y2="90"/>
-  </g>
-${columns}
-  <text x="440" y="106" text-anchor="middle" font-family="${FONT_MONO}" font-size="8.5" fill="${theme.muted}" opacity="0.9">auto-generated by GitHub Actions · refreshed daily at 03:17 UTC</text>
-</svg>
-`;
+async function gh(url) {
+  const res = await fetch(url, { headers });
+  if (!res.ok) throw new Error(`${url} -> ${res.status} ${res.statusText}`);
+  return res.json();
 }
 
-const trophyData = [
-  { label: "PUBLIC REPOS", value: profile.public_repos ?? repos.length, icon: "repo" },
-  { label: "TOTAL STARS", value: stars, icon: "star" },
-  { label: "FOLLOWERS", value: profile.followers ?? 0, icon: "people" },
-  { label: "LANGUAGES", value: languages.length, icon: "code" },
-];
-
-function trophyIcon(kind, x, y, color) {
-  switch (kind) {
-    case "repo":
-      return `<g stroke="${color}" stroke-width="1.6" fill="none" stroke-linecap="round">
-        <rect x="${x}" y="${y}" width="20" height="26" rx="3"/>
-        <line x1="${x + 6}" y1="${y + 5}" x2="${x + 6}" y2="${y + 21}"/>
-      </g>`;
-    case "star":
-      return `<polygon fill="${color}" points="60,49 62.6,56.1 70.2,56.3 64.2,60.9 66.4,68.1 60,63.8 53.6,68.1 55.8,60.9 49.8,56.3 57.4,56.1" transform="translate(${x - 60 + 10} ${y - 49 + 3})"/>`;
-    case "people":
-      return `<g stroke="${color}" stroke-width="1.6" fill="none">
-        <circle cx="${x + 8}" cy="${y + 9}" r="4.5"/>
-        <circle cx="${x + 20}" cy="${y + 9}" r="4.5"/>
-        <path d="M${x - 1} ${y + 26} a 10 8 0 0 1 18 0"/>
-        <path d="M${x + 11} ${y + 26} a 10 8 0 0 1 18 0"/>
-      </g>`;
-    default:
-      return `<g fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M${x + 7} ${y + 6} l-7 7 7 7"/>
-        <path d="M${x + 17} ${y + 6} l7 7 -7 7"/>
-      </g>`;
-  }
-}
-
-function renderTrophies(theme) {
-  const tiles = trophyData
-    .map((t, i) => {
-      const x = 30 + i * 208;
-      return `  <rect x="${x}" y="18" width="196" height="84" rx="12" fill="${theme.bgB}" stroke="${theme.border}"/>
-${trophyIcon(t.icon, x + 22, 47, theme.accent)}
-  <text x="${x + 56}" y="56" font-family="${FONT_MONO}" font-size="9" letter-spacing="1.5" fill="${theme.muted}">${t.label}</text>
-  <text x="${x + 56}" y="84" font-family="${FONT_SANS}" font-size="24" font-weight="800" fill="${theme.text}">${t.value}</text>`;
-    })
-    .join("\n");
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="880" height="120" viewBox="0 0 880 120" role="img" aria-label="Profile trophies: ${trophyData.map((t) => `${t.value} ${t.label.toLowerCase()}`).join(", ")}">
-  <title>Profile trophies — Maki99-99</title>
-${tiles}
-</svg>
-`;
-}
-
-async function fetchCalendar() {
-  if (!TOKEN) return null;
-  const res = await fetch("https://api.github.com/graphql", {
+async function graphql(query, variables) {
+  const res = await fetch(`${API}/graphql`, {
     method: "POST",
     headers: { ...headers, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: `query ($login: String!) {
-        user(login: $login) {
-          contributionsCollection {
-            contributionCalendar {
-              totalContributions
-              weeks { contributionDays { date contributionCount } }
-            }
-          }
-        }
-      }`,
-      variables: { login: USER },
-    }),
+    body: JSON.stringify({ query, variables }),
   });
-  if (!res.ok) throw new Error(`GitHub GraphQL ${res.status}`);
-  const json = await res.json();
-  if (json.errors) throw new Error(`GitHub GraphQL: ${json.errors[0]?.message ?? "unknown error"}`);
-  return json.data.user.contributionsCollection.contributionCalendar;
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok || json.errors) {
+    throw new Error(`GraphQL -> ${res.status}: ${JSON.stringify(json.errors || json).slice(0, 300)}`);
+  }
+  return json.data;
 }
 
-function renderActivity(calendar, theme, updatedAt) {
-  const weeks = calendar.weeks.slice(-53);
-  const cell = 9;
-  const step = 12;
-  const x0 = 36;
-  const y0 = 58;
-  const cells = [];
-  for (let wi = 0; wi < weeks.length; wi += 1) {
-    const days = weeks[wi].contributionDays;
-    for (let di = 0; di < days.length; di += 1) {
-      const count = days[di].contributionCount;
-      const level = count === 0 ? 0 : count < 2 ? 1 : count < 4 ? 2 : count < 7 ? 3 : 4;
-      cells.push(
-        `<rect x="${x0 + wi * step}" y="${y0 + di * step}" width="${cell}" height="${cell}" rx="2" fill="${theme.levels[level]}"/>`
-      );
-    }
-  }
-  const legend = theme.levels
-    .map((c, i) => `<rect x="${740 + i * 15}" y="152" width="10" height="10" rx="2" fill="${c}"/>`)
-    .join("");
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="880" height="190" viewBox="0 0 880 190" role="img" aria-label="Contribution activity for the last 12 months: ${calendar.totalContributions} contributions">
-  <title>Activity — Maki99-99</title>
+function frame(t, width, height, label, body) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label)}">
+  <title>${esc(label)}</title>
   <defs>
-    <linearGradient id="gbg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="${theme.bgA}"/>
-      <stop offset="1" stop-color="${theme.bgB}"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${t.bg0}"/>
+      <stop offset="1" stop-color="${t.bg1}"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="${t.grad0}"/>
+      <stop offset="1" stop-color="${t.grad1}"/>
     </linearGradient>
   </defs>
-  <rect x="0.5" y="0.5" width="879" height="189" rx="16" fill="url(#gbg)" stroke="${theme.border}"/>
-  <text x="36" y="32" font-family="${FONT_MONO}" font-size="10" letter-spacing="2" fill="${theme.muted}">ACTIVITY — LAST 12 MONTHS</text>
-  <text x="844" y="32" text-anchor="end" font-family="${FONT_MONO}" font-size="10" fill="${theme.accent}">${calendar.totalContributions} CONTRIBUTIONS</text>
-${cells.join("\n")}
-  <text x="36" y="161" font-family="${FONT_MONO}" font-size="9" fill="${theme.muted}" opacity="0.9">updated ${updatedAt}</text>
-  <text x="735" y="161" text-anchor="end" font-family="${FONT_MONO}" font-size="8" fill="${theme.muted}">LESS</text>
-${legend}
-  <text x="822" y="161" font-family="${FONT_MONO}" font-size="8" fill="${theme.muted}">MORE</text>
+  <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="16" fill="url(#bg)" stroke="${t.border}"/>
+  ${body}
 </svg>
 `;
 }
 
-await mkdir(OUT_DIR, { recursive: true });
-await writeFile(resolve(OUT_DIR, "stats-card-dark.svg"), renderStatsCard(themes.dark), "utf8");
-await writeFile(resolve(OUT_DIR, "stats-card-light.svg"), renderStatsCard(themes.light), "utf8");
-await writeFile(resolve(OUT_DIR, "trophies-dark.svg"), renderTrophies(themes.dark), "utf8");
-await writeFile(resolve(OUT_DIR, "trophies-light.svg"), renderTrophies(themes.light), "utf8");
-
-const calendar = await fetchCalendar();
-if (calendar) {
-  const updated = new Date().toISOString().slice(0, 10);
-  await writeFile(resolve(OUT_DIR, "activity-dark.svg"), renderActivity(calendar, themes.dark, updated), "utf8");
-  await writeFile(resolve(OUT_DIR, "activity-light.svg"), renderActivity(calendar, themes.light, updated), "utf8");
-  console.log(`activity written: ${calendar.totalContributions} contributions over ${calendar.weeks.length} weeks`);
-} else {
-  console.log("activity skipped: GITHUB_TOKEN not set — committed placeholders kept");
+function metricRow(t, height, cells) {
+  const step = 880 / cells.length;
+  let out = `<g stroke="${t.border}" stroke-opacity="0.9">`;
+  for (let i = 1; i < cells.length; i++) {
+    out += `<line x1="${i * step}" y1="${height * 0.25}" x2="${i * step}" y2="${height * 0.75}"/>`;
+  }
+  out += "</g>";
+  cells.forEach((c, i) => {
+    const cx = step * i + step / 2;
+    out += `<text x="${cx}" y="${height / 2 - 10}" text-anchor="middle" font-family="${mono}" font-size="9.5" letter-spacing="2" fill="${t.muted}">${esc(c.label)}</text>`;
+    out += `<text x="${cx}" y="${height / 2 + 20}" text-anchor="middle" font-family="${sans}" font-size="24" font-weight="800" fill="${t.text}">${esc(c.value)}</text>`;
+  });
+  return out;
 }
 
-console.log(
-  `stats written: ${profile.public_repos ?? repos.length} repos, ${stars} stars, ${profile.followers ?? 0} followers, last push ${lastPushDate}`
-);
-console.log(`trophies written: ${trophyData.map((t) => `${t.value} ${t.label}`).join(" · ")}`);
+function renderTopLangs(t, langs) {
+  const width = 880;
+  const top = 58;
+  const rowH = 34;
+  const height = top + langs.length * rowH + 16;
+  const barX = 280;
+  const barW = 470;
+  const barH = 10;
+  const max = langs[0].pct || 1;
+
+  let body = `<text x="36" y="32" font-family="${mono}" font-size="10" letter-spacing="2.5" fill="${t.muted}">MOST USED LANGUAGES</text>`;
+  body += `<text x="844" y="32" text-anchor="end" font-family="${mono}" font-size="9" letter-spacing="1.5" fill="${t.muted}" opacity="0.85">BY CODE SIZE · OWN REPOS</text>`;
+  langs.forEach((l, i) => {
+    const cy = top + i * rowH;
+    const w = Math.max(barH, Math.round((l.pct / max) * barW));
+    body += `<text x="36" y="${cy + 4.5}" font-family="${sans}" font-size="13.5" font-weight="700" fill="${t.text}">${esc(l.name)}</text>`;
+    body += `<rect x="${barX}" y="${cy - 5}" width="${barW}" height="${barH}" rx="5" fill="${t.track}"/>`;
+    body += `<rect x="${barX}" y="${cy - 5}" width="${w}" height="${barH}" rx="5" fill="url(#bar)"/>`;
+    body += `<text x="844" y="${cy + 4}" text-anchor="end" font-family="${mono}" font-size="11" fill="${t.muted}">${l.pct.toFixed(1)}%</text>`;
+  });
+
+  const names = langs.map((l) => l.name).join(", ");
+  return frame(t, width, height, `Most used languages by code size: ${names}`, body);
+}
+
+async function fetchRepos() {
+  const repos = [];
+  for (let page = 1; page <= 5; page++) {
+    const batch = await gh(`${API}/users/${USER}/repos?per_page=100&page=${page}&sort=pushed`);
+    repos.push(...batch);
+    if (batch.length < 100) break;
+  }
+  return repos;
+}
+
+async function topLanguages(repos) {
+  const totals = new Map();
+  for (const repo of repos) {
+    if (repo.fork) continue;
+    try {
+      const langs = await gh(`${API}/repos/${USER}/${repo.name}/languages`);
+      for (const [name, bytes] of Object.entries(langs)) {
+        totals.set(name, (totals.get(name) || 0) + bytes);
+      }
+    } catch (e) {
+      console.warn(`languages skipped for ${repo.name}: ${e.message}`);
+    }
+  }
+  const sum = [...totals.values()].reduce((a, b) => a + b, 0) || 1;
+  return [...totals.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, bytes]) => ({ name, pct: (bytes / sum) * 100 }));
+}
+
+async function githubStats() {
+  const query = `query($login: String!) {
+    user(login: $login) {
+      contributionsCollection {
+        totalCommitContributions
+        totalPullRequestContributions
+        totalIssueContributions
+        totalPullRequestReviewContributions
+      }
+    }
+  }`;
+  const data = await graphql(query, { login: USER });
+  const c = data.user.contributionsCollection;
+  return [
+    { label: "COMMITS · 12 MO", value: String(c.totalCommitContributions) },
+    { label: "PULL REQUESTS", value: String(c.totalPullRequestContributions) },
+    { label: "ISSUES", value: String(c.totalIssueContributions) },
+    { label: "PR REVIEWS", value: String(c.totalPullRequestReviewContributions) },
+  ];
+}
+
+async function main() {
+  await mkdir(OUT, { recursive: true });
+
+  const profile = await gh(`${API}/users/${USER}`);
+  const repos = await fetchRepos();
+  const stars = repos.reduce((a, r) => a + r.stargazers_count, 0);
+
+  const metrics = [
+    { label: "PUBLIC REPOS", value: String(profile.public_repos) },
+    { label: "TOTAL STARS", value: String(stars) },
+    { label: "FOLLOWERS", value: String(profile.followers) },
+  ];
+
+  const langs = await topLanguages(repos);
+  if (langs.length === 0) throw new Error("No language data found — refusing to write an empty card.");
+
+  let statCells = null;
+  if (TOKEN) {
+    try {
+      statCells = await githubStats();
+    } catch (e) {
+      console.warn(`GitHub stats unavailable, keeping placeholder: ${e.message}`);
+    }
+  } else {
+    console.log("No token available — writing placeholder GitHub stats (CI fills it).");
+  }
+  const placeholder = ["COMMITS · 12 MO", "PULL REQUESTS", "ISSUES", "PR REVIEWS"].map(
+    (label) => ({ label, value: "—" })
+  );
+
+  for (const [name, t] of Object.entries(themes)) {
+    const metricsLabel = `Profile metrics: ${metrics.map((m) => `${m.value} ${m.label.toLowerCase()}`).join(", ")}`;
+    await writeFile(
+      path.join(OUT, `stats-card-${name}.svg`),
+      frame(t, 880, 120, metricsLabel, metricRow(t, 120, metrics))
+    );
+    await writeFile(path.join(OUT, `top-langs-${name}.svg`), renderTopLangs(t, langs));
+    await writeFile(
+      path.join(OUT, `github-stats-${name}.svg`),
+      frame(
+        t,
+        880,
+        120,
+        "GitHub contributions for the last 12 months: commits, pull requests, issues, reviews",
+        metricRow(t, 120, statCells ?? placeholder)
+      )
+    );
+  }
+
+  console.log(`Assets written to ${OUT} (star count ${stars}, ${langs.length} languages, token ${TOKEN ? "yes" : "no"})`);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
