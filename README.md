@@ -26,21 +26,21 @@
 <table>
   <tr>
     <td width="50%" valign="top">
-      <b>🎨 Front end</b><br>
+      <img src="assets/about/frontend.svg" width="18" alt="" /> <b>Front end</b><br>
       React — interfaces in TypeScript &amp; JavaScript that stay fast and accessible.
     </td>
     <td width="50%" valign="top">
-      <b>⚙️ Back end</b><br>
+      <img src="assets/about/backend.svg" width="18" alt="" /> <b>Back end</b><br>
       Spring Boot, Django &amp; Laravel — APIs in Java, Python &amp; PHP, built to last.
     </td>
   </tr>
   <tr>
     <td valign="top">
-      <b>🗄️ Databases</b><br>
+      <img src="assets/about/database.svg" width="18" alt="" /> <b>Databases</b><br>
       MySQL &amp; PostgreSQL — modeled, indexed and migration-ready.
     </td>
     <td valign="top">
-      <b>🚀 DevOps</b><br>
+      <img src="assets/about/devops.svg" width="18" alt="" /> <b>DevOps</b><br>
       Docker, Kubernetes &amp; GitHub Actions — from commit to cluster.
     </td>
   </tr>
