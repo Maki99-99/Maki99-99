@@ -110,20 +110,45 @@
     <text x="617" y="282" text-anchor="middle">3306</text>
   </g>
 
-  <!-- moving packets -->
-  <circle r="3" fill="#0891B2">
-    <animateMotion dur="4s" repeatCount="indefinite"><mpath href="#flowBrowser" xlink:href="#flowBrowser"/></animateMotion>
-  </circle>
-  <circle r="3" fill="#0891B2">
-    <animateMotion dur="3.6s" begin="0.6s" repeatCount="indefinite"><mpath href="#flowAngular" xlink:href="#flowAngular"/></animateMotion>
-  </circle>
-  <circle r="3" fill="#0891B2">
-    <animateMotion dur="3.2s" begin="1.1s" repeatCount="indefinite"><mpath href="#flowSpring" xlink:href="#flowSpring"/></animateMotion>
-  </circle>
-  <circle r="3" fill="#0891B2">
-    <animateMotion dur="2.2s" begin="0.3s" repeatCount="indefinite"><mpath href="#flowMysql" xlink:href="#flowMysql"/></animateMotion>
-  </circle>
-  <circle r="3" fill="#4F46E5">
-    <animateMotion dur="6s" begin="2s" repeatCount="indefinite"><mpath href="#flowDeploy" xlink:href="#flowDeploy"/></animateMotion>
-  </circle>
+  <!-- moving packets: slow, low-opacity glowing dots; hidden when animation is off -->
+  <g fill="#0891B2" opacity="0">
+    <animate attributeName="opacity" values="0;0.9" dur="2s" begin="0s" fill="freeze"/>
+    <g>
+      <animateMotion dur="8s" begin="0s" repeatCount="indefinite"><mpath href="#flowBrowser" xlink:href="#flowBrowser"/></animateMotion>
+      <circle r="6.5" fill-opacity="0.16"/>
+      <circle r="2.2" fill-opacity="0.72"/>
+    </g>
+  </g>
+  <g fill="#0891B2" opacity="0">
+    <animate attributeName="opacity" values="0;0.9" dur="2s" begin="0s" fill="freeze"/>
+    <g>
+      <animateMotion dur="7s" begin="1.2s" repeatCount="indefinite"><mpath href="#flowAngular" xlink:href="#flowAngular"/></animateMotion>
+      <circle r="6.5" fill-opacity="0.16"/>
+      <circle r="2.2" fill-opacity="0.72"/>
+    </g>
+  </g>
+  <g fill="#0891B2" opacity="0">
+    <animate attributeName="opacity" values="0;0.9" dur="2s" begin="0s" fill="freeze"/>
+    <g>
+      <animateMotion dur="6.4s" begin="2.4s" repeatCount="indefinite"><mpath href="#flowSpring" xlink:href="#flowSpring"/></animateMotion>
+      <circle r="6.5" fill-opacity="0.16"/>
+      <circle r="2.2" fill-opacity="0.72"/>
+    </g>
+  </g>
+  <g fill="#0891B2" opacity="0">
+    <animate attributeName="opacity" values="0;0.9" dur="2s" begin="0s" fill="freeze"/>
+    <g>
+      <animateMotion dur="5s" begin="0.6s" repeatCount="indefinite"><mpath href="#flowMysql" xlink:href="#flowMysql"/></animateMotion>
+      <circle r="6.5" fill-opacity="0.16"/>
+      <circle r="2.2" fill-opacity="0.72"/>
+    </g>
+  </g>
+  <g fill="#4F46E5" opacity="0">
+    <animate attributeName="opacity" values="0;0.9" dur="2s" begin="0s" fill="freeze"/>
+    <g>
+      <animateMotion dur="9s" begin="3s" repeatCount="indefinite"><mpath href="#flowDeploy" xlink:href="#flowDeploy"/></animateMotion>
+      <circle r="6.5" fill-opacity="0.16"/>
+      <circle r="2.2" fill-opacity="0.72"/>
+    </g>
+  </g>
 </svg>

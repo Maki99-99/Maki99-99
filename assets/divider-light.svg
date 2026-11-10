@@ -1,16 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="880" height="28" viewBox="0 0 880 28" role="img" aria-label="Decorative divider">
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="24" viewBox="0 0 880 24" role="img" aria-label="Thin animated gradient divider">
+  <title>Section divider</title>
   <defs>
     <linearGradient id="dline" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#4F46E5" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="#4F46E5" stop-opacity="0.9"/>
+      <stop offset="0" stop-color="#DCE5F0" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#6366F1" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#DCE5F0" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dshine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0891B2" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#0891B2" stop-opacity="0.85"/>
       <stop offset="1" stop-color="#0891B2" stop-opacity="0"/>
     </linearGradient>
+    <clipPath id="dclip"><rect x="40" y="10.6" width="800" height="2.8"/></clipPath>
   </defs>
-  <path id="dpath" d="M60 14 H820" stroke="url(#dline)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-  <circle r="2.6" fill="#0891B2">
-    <animateMotion dur="7s" repeatCount="indefinite">
-      <mpath href="#dpath"/>
-    </animateMotion>
-    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.92;1" dur="7s" repeatCount="indefinite"/>
-  </circle>
+  <line x1="40" y1="12" x2="840" y2="12" stroke="url(#dline)" stroke-width="1.2" stroke-linecap="round"/>
+  <g clip-path="url(#dclip)">
+    <rect x="-240" y="10.6" width="240" height="2.8" fill="url(#dshine)">
+      <animate attributeName="x" values="-240;880" dur="6s" repeatCount="indefinite"/>
+    </rect>
+  </g>
 </svg>

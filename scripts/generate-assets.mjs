@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 // Renders the self-hosted profile cards straight from the GitHub API and
 // writes them to /assets:
-//   - stats-card-*.svg    profile metrics (repos, stars, followers)
 //   - github-stats-*.svg  contributions for the last 12 months
 //   - top-langs-*.svg     most used languages by code size
+//   - streak-*.svg        current/longest streak and total contributions
 // Run by .github/workflows/update-assets.yml. Auth comes from the workflow
 // (PAT_1 preferred, GITHUB_TOKEN fallback) — never from the code.
 
 import { writeFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import path from "node:path";
 
 const USER = process.env.GH_USER || "Maki99-99";
@@ -169,56 +170,97 @@ async function githubStats() {
   ];
 }
 
+async function contributionStreaks() {
+  const query = `query($login: String!) {
+    user(login: $login) {
+      contributionsCollection {
+        contributionCalendar {
+          totalContributions
+          weeks { contributionDays { date contributionCount } }
+        }
+      }
+    }
+  }`;
+  const data = await graphql(query, { login: USER });
+  const cal = data.user.contributionsCollection.contributionCalendar;
+  const days = cal.weeks
+    .flatMap((w) => w.contributionDays)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  let current = 0;
+  for (let i = days.length - 1; i >= 0; i--) {
+    if (days[i].contributionCount > 0) {
+      for (let j = i; j >= 0 && days[j].contributionCount > 0; j--) current++;
+      break;
+    }
+    if (i !== days.length - 1) break; // today may be empty; anything older breaks the streak
+  }
+
+  let longest = 0;
+  let run = 0;
+  for (const d of days) {
+    run = d.contributionCount > 0 ? run + 1 : 0;
+    if (run > longest) longest = run;
+  }
+
+  const fmtDays = (n) => `${n} ${n === 1 ? "day" : "days"}`;
+  return [
+    { label: "CURRENT STREAK", value: fmtDays(current) },
+    { label: "LONGEST STREAK", value: fmtDays(longest) },
+    { label: "TOTAL CONTRIBUTIONS", value: String(cal.totalContributions) },
+  ];
+}
+
 async function main() {
   await mkdir(OUT, { recursive: true });
 
-  const profile = await gh(`${API}/users/${USER}`);
   const repos = await fetchRepos();
-  const stars = repos.reduce((a, r) => a + r.stargazers_count, 0);
-
-  const metrics = [
-    { label: "PUBLIC REPOS", value: String(profile.public_repos) },
-    { label: "TOTAL STARS", value: String(stars) },
-    { label: "FOLLOWERS", value: String(profile.followers) },
-  ];
-
   const langs = await topLanguages(repos);
   if (langs.length === 0) throw new Error("No language data found — refusing to write an empty card.");
 
   let statCells = null;
+  let streakCells = null;
   if (TOKEN) {
     try {
       statCells = await githubStats();
     } catch (e) {
-      console.warn(`GitHub stats unavailable, keeping placeholder: ${e.message}`);
+      console.warn(`GitHub stats unavailable, keeping existing card: ${e.message}`);
+    }
+    try {
+      streakCells = await contributionStreaks();
+    } catch (e) {
+      console.warn(`Streak stats unavailable, keeping existing card: ${e.message}`);
     }
   } else {
-    console.log("No token available — writing placeholder GitHub stats (CI fills it).");
+    console.log("No token available — GitHub stats and streak cards are left untouched.");
   }
-  const placeholder = ["COMMITS · 12 MO", "PULL REQUESTS", "ISSUES", "PR REVIEWS"].map(
+
+  const placeholderStats = ["COMMITS · 12 MO", "PULL REQUESTS", "ISSUES", "PR REVIEWS"].map(
+    (label) => ({ label, value: "—" })
+  );
+  const placeholderStreak = ["CURRENT STREAK", "LONGEST STREAK", "TOTAL CONTRIBUTIONS"].map(
     (label) => ({ label, value: "—" })
   );
 
+  const writeCard = async (name, t, cells, placeholder, label) => {
+    const file = path.join(OUT, name);
+    if (!cells && existsSync(file)) return; // keep the last good version
+    await writeFile(file, frame(t, 880, 120, label, metricRow(t, 120, cells ?? placeholder)));
+  };
+
   for (const [name, t] of Object.entries(themes)) {
-    const metricsLabel = `Profile metrics: ${metrics.map((m) => `${m.value} ${m.label.toLowerCase()}`).join(", ")}`;
-    await writeFile(
-      path.join(OUT, `stats-card-${name}.svg`),
-      frame(t, 880, 120, metricsLabel, metricRow(t, 120, metrics))
-    );
     await writeFile(path.join(OUT, `top-langs-${name}.svg`), renderTopLangs(t, langs));
-    await writeFile(
-      path.join(OUT, `github-stats-${name}.svg`),
-      frame(
-        t,
-        880,
-        120,
-        "GitHub contributions for the last 12 months: commits, pull requests, issues, reviews",
-        metricRow(t, 120, statCells ?? placeholder)
-      )
+    await writeCard(
+      `github-stats-${name}.svg`, t, statCells, placeholderStats,
+      "GitHub contributions for the last 12 months: commits, pull requests, issues, reviews"
+    );
+    await writeCard(
+      `streak-${name}.svg`, t, streakCells, placeholderStreak,
+      "GitHub streak: current streak, longest streak, total contributions"
     );
   }
 
-  console.log(`Assets written to ${OUT} (star count ${stars}, ${langs.length} languages, token ${TOKEN ? "yes" : "no"})`);
+  console.log(`Assets written to ${OUT} (${langs.length} languages, token ${TOKEN ? "yes" : "no"})`);
 }
 
 main().catch((e) => {

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" role="img" aria-label="Pulsing live indicator">
+  <circle cx="7" cy="7" r="5.5" fill="#22D3EE" fill-opacity="0.15">
+    <animate attributeName="fill-opacity" values="0.10;0.30;0.10" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="7" cy="7" r="3" fill="#22D3EE">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

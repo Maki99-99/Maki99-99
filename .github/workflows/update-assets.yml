@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Generate profile cards (metrics, GitHub stats, top languages)
+      - name: Generate profile cards (GitHub stats, top languages, streak)
         env:
           GH_USER: ${{ github.repository_owner }}
           # PAT_1: repository secret, classic PAT with the read:user scope
