@@ -1,7 +1,7 @@
 <h1 align="center">Hi, I'm Maki Jbelia 👋</h1>
 
 <p align="center">
-  <b>Full-Stack Developer</b> · Angular · Spring Boot · Django · React<br/>
+  <b>Full-Stack Developer</b> · Django · Spring Boot · Laravel · React<br/>
   I build web applications end-to-end and deploy them with Docker &amp; Kubernetes.
 </p>
 
