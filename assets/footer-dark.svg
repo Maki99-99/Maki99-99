@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="120" viewBox="0 0 880 120" role="img" aria-label="Decorative footer with slowly drifting waves">
+  <title>Footer — slow drift</title>
+  <defs>
+    <linearGradient id="fbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#0F1A2E"/>
+    </linearGradient>
+    <linearGradient id="frule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#818CF8" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#818CF8" stop-opacity="0.55"/>
+      <stop offset="0.78" stop-color="#22D3EE" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#22D3EE" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="fdots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.9" fill="#273755"/>
+    </pattern>
+    <clipPath id="fclip"><rect x="1" y="1" width="878" height="118" rx="17"/></clipPath>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="879" height="119" rx="18" fill="url(#fbg)" stroke="#23304F"/>
+
+  <g clip-path="url(#fclip)">
+    <rect x="0" y="0" width="880" height="120" fill="url(#fdots)" opacity="0.35"/>
+    <rect x="40" y="29.4" width="800" height="1.2" rx="0.6" fill="url(#frule)"/>
+
+    <g fill="#6366F1" fill-opacity="0.12">
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;-880 0" dur="36s" repeatCount="indefinite"/>
+        <path d="M0 84 q55 -14 110 0 t110 0 t110 0 t110 0 t110 0 t110 0 t110 0 t110 0 V120 H0 Z"/>
+        <path d="M880 84 q55 -14 110 0 t110 0 t110 0 t110 0 t110 0 t110 0 t110 0 t110 0 V120 H880 Z"/>
+      </g>
+    </g>
+
+    <g fill="#22D3EE" fill-opacity="0.09">
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;-880 0" dur="44s" repeatCount="indefinite"/>
+        <path d="M0 96 q55 -12 110 0 t110 0 t110 0 t110 0 t110 0 t110 0 t110 0 t110 0 V120 H0 Z"/>
+        <path d="M880 96 q55 -12 110 0 t110 0 t110 0 t110 0 t110 0 t110 0 t110 0 t110 0 V120 H880 Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

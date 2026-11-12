@@ -166,3 +166,10 @@ Angular 16 talks to a Spring Boot 3 API backed by MySQL 8. Everything ships as D
 </p>
 
 <p align="center"><sub>Building full-stack apps, one deploy at a time · Génie Logiciel</sub></p>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/footer-dark.svg">
+    <img width="880" alt="Decorative footer with indigo and cyan waves drifting slowly beneath a thin gradient rule" src="assets/footer-light.svg">
+  </picture>
+</p>

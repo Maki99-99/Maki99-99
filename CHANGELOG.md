@@ -2,6 +2,24 @@
 
 Profile README for **Maki99-99**. Visuals live in `/assets` (two skins each, served via `<picture>`); every asset reference is relative.
 
+## 2026-11-12 — Footer drift
+
+### Added
+- `assets/footer-dark.svg` and `assets/footer-light.svg`: 880×120 closing band with a thin indigo→cyan rule and two low-opacity wave layers drifting at 36 s and 44 s (SMIL `animateTransform`). Static fallback is the full finished band; no text added.
+- README: footer `<picture>` block appended after the existing sign-off line, with a dark `<source>` and light `<img>` fallback, `width="880"`, and descriptive alt text.
+
+### Fixed
+- `assets/divider-dark.svg` and `assets/divider-light.svg`: the base gradient rule was a zero-height `<line>`; Chrome drops gradients on zero-height bounding boxes, which left the static fallback blank. Replaced with a 1.2 px-high rounded `<rect>` using the same gradient and geometry. README unchanged.
+- `assets/footer-dark.svg` and `assets/footer-light.svg`: used the same rect technique so the thin rule survives animation-off rendering.
+
+### Verified, no change
+- Hero shimmer and blinking cursor, deploiement packet dots and the pulsing status dot were already present at task start; all keep loops ≥ 2 s, static fallbacks and the original palette.
+- Stack icons, About table wording, headings and link targets untouched. Stack shimmer skipped — the icon grid is already dense.
+- No workflow change; the optional trophy card was skipped (the existing generated stats, top-languages and streak cards already cover the API-derived content).
+
+### Path changes
+- None. No image path changed and no existing static image was edited.
+
 ## 2026-11-10 — Leaner stats, subtle motion
 
 ### Removed
