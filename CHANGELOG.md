@@ -2,6 +2,11 @@
 
 Profile README for **Maki99-99**. Visuals live in `/assets` (two skins each, served via `<picture>`); every asset reference is relative.
 
+## 2026-11-13 — Project shipped
+
+### Changed
+- README: "🔭 Currently building" → "✅ Built" for `kubernetes-deployments`, which is now complete.
+
 ## 2026-11-13 — Project rename: kubernetes-deployments
 
 ### Changed

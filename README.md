@@ -51,7 +51,7 @@
 <p><picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/pulse-dot-dark.svg">
   <img width="14" height="14" alt="Pulsing live indicator" src="assets/pulse-dot-light.svg">
-</picture> <b>🔭 Currently building</b> — <a href="https://github.com/Maki99-99/kubernetes-deployments"><code>kubernetes-deployments</code></a>, a full-stack user-management app running on Kubernetes.</p>
+</picture> <b>✅ Built</b> — <a href="https://github.com/Maki99-99/kubernetes-deployments"><code>kubernetes-deployments</code></a>, a full-stack user-management app running on Kubernetes.</p>
 
 ## Stack
 
