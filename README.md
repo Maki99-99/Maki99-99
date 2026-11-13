@@ -51,7 +51,7 @@
 <p><picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/pulse-dot-dark.svg">
   <img width="14" height="14" alt="Pulsing live indicator" src="assets/pulse-dot-light.svg">
-</picture> <b>🔭 Currently building</b> — <a href="https://github.com/Maki99-99/deploiement"><code>deploiement</code></a>, a full-stack user-management app running on Kubernetes.</p>
+</picture> <b>🔭 Currently building</b> — <a href="https://github.com/Maki99-99/kubernetes-deployments"><code>kubernetes-deployments</code></a>, a full-stack user-management app running on Kubernetes.</p>
 
 ## Stack
 
@@ -95,20 +95,20 @@
 
 ## Projects
 
-### deploiement
+### kubernetes-deployments
 
 **Full-stack user management — containerized and deployed on Kubernetes.**  
 Angular 16 talks to a Spring Boot 3 API backed by MySQL 8. Everything ships as Docker images and runs on Kubernetes Deployments and Services, configured through a ConfigMap and a Secret, exposed through an NGINX Ingress.
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/deploiement-arch-dark.svg">
-    <img width="880" alt="Architecture diagram: a browser and Docker images feed a Kubernetes cluster; NGINX Ingress routes angular.tp.local to Angular and api.tp.local to Spring Boot, which queries MySQL over JDBC" src="assets/deploiement-arch-light.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/kubernetes-deployments-arch-dark.svg">
+    <img width="880" alt="Architecture diagram: a browser and Docker images feed a Kubernetes cluster; NGINX Ingress routes angular.tp.local to Angular and api.tp.local to Spring Boot, which queries MySQL over JDBC" src="assets/kubernetes-deployments-arch-light.svg">
   </picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Maki99-99/deploiement"><img alt="deploiement — source code" src="https://img.shields.io/badge/Source%20code-deploiement-6366F1?style=for-the-badge"></a>
+  <a href="https://github.com/Maki99-99/kubernetes-deployments"><img alt="kubernetes-deployments — source code" src="https://img.shields.io/badge/Source%20code-kubernetes--deployments-6366F1?style=for-the-badge"></a>
   <img alt="Angular 16" src="https://img.shields.io/badge/Angular-16-DD0031?style=for-the-badge&amp;logo=angular&amp;logoColor=white">
   <img alt="Spring Boot 3" src="https://img.shields.io/badge/Spring%20Boot-3-6DB33F?style=for-the-badge&amp;logo=springboot&amp;logoColor=white">
   <img alt="MySQL 8" src="https://img.shields.io/badge/MySQL-8-4479A1?style=for-the-badge&amp;logo=mysql&amp;logoColor=white">

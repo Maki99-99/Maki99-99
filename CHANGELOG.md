@@ -2,6 +2,16 @@
 
 Profile README for **Maki99-99**. Visuals live in `/assets` (two skins each, served via `<picture>`); every asset reference is relative.
 
+## 2026-11-13 — Project rename: kubernetes-deployments
+
+### Changed
+- README: the project formerly referenced as `deploiement` is now `kubernetes-deployments` — the "Currently building" link and `<code>` label, the `###` project heading, and the source-code badge (href, alt text and shield text/URL) all point to `https://github.com/Maki99-99/kubernetes-deployments`.
+
+### Path changes
+- `assets/deploiement-arch-dark.svg` → `assets/kubernetes-deployments-arch-dark.svg` and `assets/deploiement-arch-light.svg` → `assets/kubernetes-deployments-arch-light.svg`; the README `<picture>` `srcset`/`src` references were updated to match.
+- Both SVGs also had their internal `aria-label`, `<title>` and top-left caption renamed to `kubernetes-deployments`; geometry, palette and animation are untouched.
+- The same two SVGs and the `<picture>` schema block were added to the `kubernetes-deployments` repository (`assets/`) so its README shows the same architecture diagram.
+
 ## 2026-11-12 — Footer drift
 
 ### Added
